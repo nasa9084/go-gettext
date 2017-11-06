@@ -30,12 +30,6 @@ func getEndian(mn []byte) binary.ByteOrder {
 	}
 }
 
-// Locale interface
-type Locale interface {
-	Load() error
-	Get(string) string
-}
-
 // implementation of Locale
 type locale struct {
 	locale string
