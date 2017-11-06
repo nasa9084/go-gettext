@@ -61,9 +61,7 @@ func (loc *locale) Load() error {
 	if err != nil {
 		return errors.Wrap(err, `opening mo file`)
 	}
-	m := mo{
-		rawFile: moFile,
-	}
+	m := newMo(moFile)
 	loc.dict, err = m.parse()
 	if err != nil {
 		return errors.Wrap(err, `parsing mo file`)

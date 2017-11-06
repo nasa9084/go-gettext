@@ -31,6 +31,14 @@ type mo struct {
 	header    header
 	poss      [][]pos
 }
+
+func newMo(f *os.File) *mo {
+	return &mo{
+		rawFile:   f,
+		byteOrder: nil,
+		header:    header{},
+		poss:      make([][]pos, 2),
+	}
 }
 
 func (m *mo) parse() (map[string]string, error) {
