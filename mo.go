@@ -5,7 +5,14 @@ import (
 	"os"
 )
 
-const headerLength = 28
+const (
+	headerLength = 28
+)
+
+const (
+	stringsKey = iota
+	translatesKey
+)
 
 type pos struct {
 	length int64
@@ -19,11 +26,11 @@ type header struct {
 }
 
 type mo struct {
-	rawFile       *os.File
-	byteOrder     binary.ByteOrder
-	header        header
-	stringPoss    []pos
-	translatePoss []pos
+	rawFile   *os.File
+	byteOrder binary.ByteOrder
+	header    header
+	poss      [][]pos
+}
 }
 
 func (m *mo) parse() (map[string]string, error) {
@@ -66,7 +73,7 @@ func (m *mo) parseStrings() error {
 	if err != nil {
 		return err
 	}
-	m.stringPoss = poss
+	m.poss[stringsKey] = poss
 	return nil
 }
 
@@ -75,7 +82,7 @@ func (m *mo) parseTranslates() error {
 	if err != nil {
 		return err
 	}
-	m.translatePoss = poss
+	m.poss[translatesKey] = poss
 	return nil
 }
 
@@ -93,13 +100,13 @@ func (m *mo) parseDescriptor(frm int64) ([]pos, error) {
 
 func (m *mo) genDict() (map[string]string, error) {
 	dict := map[string]string{}
-	for i := 0; i < len(m.stringPoss); i++ {
-		if m.stringPoss[i].length == 0 || m.translatePoss[i].length == 0 {
+	for i := 0; i < len(m.poss[stringsKey]); i++ {
+		if m.poss[stringsKey][i].length == 0 || m.poss[translatesKey][i].length == 0 {
 			continue
 		}
 
-		key := readSectionToString(m.rawFile, m.stringPoss[i].offset, m.stringPoss[i].length)
-		val := readSectionToString(m.rawFile, m.translatePoss[i].offset, m.translatePoss[i].length)
+		key := readSectionToString(m.rawFile, m.poss[stringsKey][i].offset, m.poss[stringsKey][i].length)
+		val := readSectionToString(m.rawFile, m.poss[translatesKey][i].offset, m.poss[translatesKey][i].length)
 
 		dict[key] = val
 	}
