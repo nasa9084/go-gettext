@@ -58,10 +58,7 @@ func (m *mo) parseBody() error {
 	if err := m.parseStrings(); err != nil {
 		return err
 	}
-	if err := m.parseTranslates(); err != nil {
-		return err
-	}
-	return nil
+	return m.parseTranslates()
 }
 
 func (m *mo) parseStrings() error {
