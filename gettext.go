@@ -15,10 +15,6 @@ const (
 	rebmunCigam = "de120495"
 )
 
-type state struct {
-	ByteOrder binary.ByteOrder
-}
-
 func getEndian(mn []byte) binary.ByteOrder {
 	switch hex.EncodeToString(mn) {
 	case magicNumber:
