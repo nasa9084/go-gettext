@@ -15,6 +15,10 @@ const (
 	rebmunCigam = "de120495"
 )
 
+const (
+	defaultPath = "locale"
+)
+
 func getEndian(mn []byte) binary.ByteOrder {
 	switch hex.EncodeToString(mn) {
 	case magicNumber:
@@ -37,6 +41,7 @@ type locale struct {
 func New(loc string, opts ...func(*locale)) Locale {
 	l := &locale{
 		locale: loc,
+		path:   defaultPath,
 		dict:   map[string]string{},
 	}
 	for _, opt := range opts {
