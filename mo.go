@@ -35,10 +35,7 @@ func (m *mo) parse() (map[string]string, error) {
 	if err := m.parseHeader(); err != nil {
 		return nil, err
 	}
-	if err := m.parseStrings(); err != nil {
-		return nil, err
-	}
-	if err := m.parseTranslates(); err != nil {
+	if err := m.parseBody(); err != nil {
 		return nil, err
 	}
 	return m.genDict()
@@ -53,6 +50,16 @@ func (m *mo) parseHeader() error {
 		n: int64(m.byteOrder.Uint32(buf[4:8])),
 		o: int64(m.byteOrder.Uint32(buf[8:12])),
 		t: int64(m.byteOrder.Uint32(buf[12:16])),
+	}
+	return nil
+}
+
+func (m *mo) parseBody() error {
+	if err := m.parseStrings(); err != nil {
+		return err
+	}
+	if err := m.parseTranslates(); err != nil {
+		return err
 	}
 	return nil
 }
