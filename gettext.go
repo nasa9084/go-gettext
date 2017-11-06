@@ -113,8 +113,8 @@ func parse(f *os.File) (map[string]string, error) {
 			continue
 		}
 
-		key := string(readSection(f, st.offset, st.length))
-		val := string(readSection(f, tr.offset, tr.length))
+		key := readSectionToString(f, st.offset, st.length)
+		val := readSectionToString(f, tr.offset, tr.length)
 
 		dict[key] = val
 	}
@@ -154,4 +154,8 @@ func readSection(ra io.ReaderAt, offset, length int64) []byte {
 		panic(err)
 	}
 	return buf
+}
+
+func readSectionToString(ra io.ReaderAt, offset, length int64) string {
+	return string(readSection(ra, offset, length))
 }
