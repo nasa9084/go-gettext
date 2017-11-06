@@ -71,10 +71,6 @@ func (loc *locale) Load() error {
 	return nil
 }
 
-func (loc *locale) SetPath(path string) {
-	loc.path = path
-}
-
 // Get translation
 func (loc *locale) Get(s string) string {
 	v, ok := loc.dict[s]
