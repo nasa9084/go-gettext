@@ -105,7 +105,7 @@ func parse(f *os.File) (map[string]string, error) {
 		return nil, err
 	}
 
-	h := parseHeader(f, st.ByteOrder)
+	h := parseHeader(f, st)
 	strs := parseDescriptor(f, st, h.o, h.n)
 	trans := parseDescriptor(f, st, h.t, h.n)
 
@@ -126,20 +126,20 @@ func parse(f *os.File) (map[string]string, error) {
 	return dict, nil
 }
 
-func parseHeader(f io.ReadSeeker, bo binary.ByteOrder) header {
+func parseHeader(f io.ReadSeeker, st state) header {
 	var h header
 	var buf uint32
-	if err := binary.Read(f, bo, &buf); err != nil {
+	if err := binary.Read(f, st.ByteOrder, &buf); err != nil {
 		panic(err)
 	}
 	h.n = int64(buf)
 
-	if err := binary.Read(f, bo, &buf); err != nil {
+	if err := binary.Read(f, st.ByteOrder, &buf); err != nil {
 		panic(err)
 	}
 	h.o = int64(buf)
 
-	if err := binary.Read(f, bo, &buf); err != nil {
+	if err := binary.Read(f, st.ByteOrder, &buf); err != nil {
 		panic(err)
 	}
 	h.t = int64(buf)
