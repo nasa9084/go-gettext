@@ -51,7 +51,7 @@ func New(loc string, opts ...func(*locale)) Locale {
 }
 
 // Path option for locale files' dir
-func Path(path string) func(loc *locale) {
+func Path(path string) func(*locale) {
 	return func(loc *locale) {
 		loc.path = path
 	}
