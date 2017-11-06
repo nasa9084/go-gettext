@@ -121,29 +121,16 @@ func parse(f *os.File) (map[string]string, error) {
 	return dict, nil
 }
 
-func parseHeader(f io.ReadSeeker, st state) header {
-	var h header
-	// skip file format revision
-	if _, err := f.Seek(4, io.SeekCurrent); err != nil {
+func parseHeader(rs io.ReadSeeker, st state) header {
+	buf := make([]byte, 28)
+	if _, err := rs.Read(buf); err != nil {
 		panic(err)
 	}
-
-	var buf uint32
-	if err := binary.Read(f, st.ByteOrder, &buf); err != nil {
-		panic(err)
+	return header{
+		n: int64(st.ByteOrder.Uint32(buf[4:8])),
+		o: int64(st.ByteOrder.Uint32(buf[8:12])),
+		t: int64(st.ByteOrder.Uint32(buf[12:16])),
 	}
-	h.n = int64(buf)
-
-	if err := binary.Read(f, st.ByteOrder, &buf); err != nil {
-		panic(err)
-	}
-	h.o = int64(buf)
-
-	if err := binary.Read(f, st.ByteOrder, &buf); err != nil {
-		panic(err)
-	}
-	h.t = int64(buf)
-	return h
 }
 
 func parseDescriptor(f io.ReaderAt, st state, frm, nos int64) []nthString {
