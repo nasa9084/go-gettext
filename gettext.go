@@ -100,11 +100,6 @@ func parse(f *os.File) (map[string]string, error) {
 	}
 	st.ByteOrder = getEndian(mn)
 
-	// skip file format revision
-	if _, err := f.Seek(4, io.SeekCurrent); err != nil {
-		return nil, err
-	}
-
 	h := parseHeader(f, st)
 	strs := parseDescriptor(f, st, h.o, h.n)
 	trans := parseDescriptor(f, st, h.t, h.n)
@@ -128,6 +123,11 @@ func parse(f *os.File) (map[string]string, error) {
 
 func parseHeader(f io.ReadSeeker, st state) header {
 	var h header
+	// skip file format revision
+	if _, err := f.Seek(4, io.SeekCurrent); err != nil {
+		panic(err)
+	}
+
 	var buf uint32
 	if err := binary.Read(f, st.ByteOrder, &buf); err != nil {
 		panic(err)
