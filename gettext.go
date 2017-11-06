@@ -137,11 +137,15 @@ func parseDescriptor(f io.ReaderAt, st state, frm, nos int64) []nthString {
 	nthStrings := make([]nthString, nos)
 	for i := 0; i < int(nos); i++ {
 		sec := readSection(f, frm+int64(i*8), 8)
-		length := int64(st.ByteOrder.Uint32(sec[:4]))
-		offset := int64(st.ByteOrder.Uint32(sec[4:]))
+		length := bytesToInt64(sec[:4], st)
+		offset := bytesToInt64(sec[4:], st)
 		nthStrings[i] = nthString{length, offset}
 	}
 	return nthStrings
+}
+
+func bytesToInt64(b []byte, st state) int64 {
+	return int64(st.ByteOrder.Uint32(b))
 }
 
 func readSection(ra io.ReaderAt, offset, length int64) []byte {
