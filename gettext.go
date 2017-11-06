@@ -106,15 +106,12 @@ func parse(f *os.File) (map[string]string, error) {
 
 	dict := map[string]string{}
 	for i := 0; i < len(strs); i++ {
-		st := strs[i]
-		tr := trans[i]
-
-		if st.length == 0 || tr.length == 0 {
+		if strs[i].length == 0 || trans[i].length == 0 {
 			continue
 		}
 
-		key := readSectionToString(f, st.offset, st.length)
-		val := readSectionToString(f, tr.offset, tr.length)
+		key := readSectionToString(f, strs[i].offset, strs[i].length)
+		val := readSectionToString(f, trans[i].offset, trans[i].length)
 
 		dict[key] = val
 	}
