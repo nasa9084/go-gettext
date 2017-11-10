@@ -8,7 +8,7 @@ import (
 
 func main() {
 	loc := gettext.New("ja")
-	if err := loc.Parse(); err != nil {
+	if err := loc.Load(); err != nil {
 		panic(err)
 	}
 	// TRANSLATORS: sample comment
