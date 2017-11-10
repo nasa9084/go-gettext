@@ -6,8 +6,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-
-	"github.com/pkg/errors"
 )
 
 const (
@@ -60,12 +58,12 @@ func Path(path string) func(*locale) {
 func (loc *locale) Load() error {
 	moFile, err := os.Open(filepath.Join(loc.path, loc.locale+".mo"))
 	if err != nil {
-		return errors.Wrap(err, `opening mo file`)
+		return err
 	}
 	m := newMo(moFile)
 	loc.dict, err = m.parse()
 	if err != nil {
-		return errors.Wrap(err, `parsing mo file`)
+		return err
 	}
 	return nil
 }
